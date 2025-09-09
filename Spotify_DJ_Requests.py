@@ -7,19 +7,22 @@ import threading
 
 from dotenv import load_dotenv
 load_dotenv() # ensures enviroment variables in .env can be used, better then hardcoding secrtet values
-
+ 
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 track_list = []
 
-def Download_Song(track_url,song):
+def Download_Song(track_url,track_length,song):
     try:
-        os.system ("spotdl "+ track_url)
-        time.sleep(10)
-        print(song,' Downloaded')
-        print('Standby...')
+        if track_length < 10:
+            os.system ("spotdl "+ track_url)
+            time.sleep(10)
+            print(song,' Downloaded')
+            print('Standby...')
+        else:
+            print("Track is too long!")
     except:
-        print('Song not found :(')
+        print('Track not found :(')
 
 def AddSong(track_name,track_url,artist_name):
     track_list.append(track_url)
@@ -47,32 +50,37 @@ class Spotify(object):
             #Track name & artist
             track_name = track["track"]["name"]
             artist_name = track["track"]["artists"][0]["name"]
+
+            #Track duration in minutes
+            track_length = track["track"]["duration_ms"] / 60000
         
         check = False
         
         if len(track_list) > 0:
             for i in range (0,len(track_list)):
-                if track_url == track_list[i]:
-                    check = False
-                else:
+                if track_url != track_list[i]:
                     check = True
+                else:
+                    check = False
+                    break
         else:
             try:
                 song = AddSong(track_name, track_url,artist_name)
-                t = threading.Thread(target=Download_Song,args=(track_url,song,), daemon=True) 
+                t = threading.Thread(target=Download_Song,args=(track_url,track_length,song,), daemon=True) 
                 t.start()      
             except:
                 print('No tracks')
 
-        if check == True:
+        if check:
             song = AddSong(track_name, track_url,artist_name)
-            t = threading.Thread(target=Download_Song,args=(track_url,song,), daemon=True)
+            t = threading.Thread(target=Download_Song,args=(track_url,track_length,song,), daemon=True)
             t.start()   
   
-        time.sleep(0.25)
-
+        
 playlist_link = input('Paste playlist link here(public spotify playlist where people will add requests): ') 
 
 while True:
    Spotify.Playlist_Data(playlist_link)
+   time.sleep(60)
+
 
