@@ -12,15 +12,20 @@ load_dotenv()
  
 client_id = os.getenv("SPOTIPY_CLIENT_ID")
 client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+
+
 track_list = set()
+
+
+if not client_id or not client_secret:
+    raise RuntimeError(
+        "Missing CLIENT_ID or CLIENT_SECRET. "
+        "Create a .env file based on .env.example."
+    )
 
 def Download_Song(track_url, track_length, song):
     if track_length >= 10:
         print("Track is too long!")
-        return
-
-    if not client_id or not client_secret:
-        print("Missing CLIENT_ID/CLIENT_SECRET in environment")
         return
 
     cmd = [
