@@ -1,6 +1,7 @@
 # Spotify-DJ-Requests
 Simple pyhton script that allows the crowd to send in songs through the use of a public spotify playlist of your choice. My program will then poll that playlist regulary, grab any new songs added and automatically download them onto your laptop. 
 
+
 Requirements:
 
     - Python 3.9+
