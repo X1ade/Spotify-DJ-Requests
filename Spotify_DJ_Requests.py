@@ -13,9 +13,7 @@ load_dotenv()
 client_id = os.getenv("SPOTIPY_CLIENT_ID")
 client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
 
-
 track_list = set()
-
 
 if not client_id or not client_secret:
     raise RuntimeError(
@@ -45,8 +43,6 @@ def Download_Song(track_url, track_length, song):
             print("[spotdl error]", ret.stderr or ret.stdout)
     except Exception as e:
         print("Track not found...", e)
-
-
 
 def AddSong(track_name,track_url,artist_name):
     track_list.add(track_url)
